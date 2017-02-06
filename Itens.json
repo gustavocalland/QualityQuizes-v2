@@ -1,0 +1,24 @@
+[  
+   {  
+      "itemName":"WHISKY RED LABEL",
+      "itemId":"1",
+      "keywords":"FANCY" 
+   },
+   {  
+      "itemName":"WHISKY BLACK LABEL",
+      "itemId":"2",
+      "keywords":"EXPENSIVE"
+   },
+   {  
+      "itemName":"BLACK FOREST BEECHWOOD HAM L/S",
+      "itemId":"3"
+   },
+   {  
+      "itemName":"PESTO PARMESAN HAM",
+      "itemId":"4"
+   },
+   {  
+      "itemName":"DELI SWEET SLICE SMOKED HAM",
+      "itemId":"5"
+   }  
+]
