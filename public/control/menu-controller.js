@@ -1,33 +1,40 @@
-qqApp.controller("menuController", function ($scope, $rootScope, $http, storageService, loginService) {
+qqApp.controller("menuController", function ($scope, $rootScope, $http, storageService, authenticationService) {
+
     init();
 
+    //When a login event is detected, calls the init function
     $rootScope.$on('loginEvent', function(event, message) {
         init();
     });
 
     function init(){
         $scope.showLoginRequiredAlert = false;
-        $scope.userIsLoggedIn = loginService.isLoggedIn();
+        $scope.userIsLoggedIn = authenticationService.isLoggedIn();
 
-        loadQuiz();
+        loadQuizes();
     }
 
-    function loadQuiz(){
-        storageService.getQuizList().then(
+
+    //TODO: Separar o number of tries/score da collection "user", e ja puxar ele junto com as informacoes do quiz aqui
+
+    //Gets all quizes from the database
+    function loadQuizes(){
+        storageService.getAllQuizes().then(
             function(quizList) {
                 listQuiz(quizList);
             }, 
             function(reason) {
-                alert('Failed: ' + reason);
+                console.error("Error obtaining quiz list: "+reason.data);
+                throw reason;
             }
         );
+        
     };
 
-
     function listQuiz(quizList){
-
-        var user = loginService.getLoggedUser();
-
+        //  If there is a logged in user, initializes the tags that say how many times 
+        //they completed the quiz and what is their max score.
+        var user = authenticationService.getLoggedUser();
         if(user){
             for (var qIndex = 0; qIndex < quizList.length; qIndex++) {
                 var element = quizList[qIndex];
@@ -55,7 +62,7 @@ qqApp.controller("menuController", function ($scope, $rootScope, $http, storageS
     //This function takes a quiz object (definied in the JSON) and generates a new quiz object 
     // with only 10 questions, taken randomly from the original quiz
     $scope.generateQuiz = function (selectedQuiz, event) {
-        if(loginService.isLoggedIn()){
+        if(authenticationService.isLoggedIn()){
             //Removes 10 random questions from the array (assuming it has 20 elements), leaving it with only 10
             for (qTriesIndex = 20; qTriesIndex > 10; qTriesIndex--) {
                 var removedPosition = Math.floor(Math.random() * qTriesIndex);

@@ -1,4 +1,4 @@
-qqApp.controller("quizController", function($scope, $rootScope, $location, loginService, storageService) {
+qqApp.controller("quizController", function($scope, $rootScope, $location, authenticationService, storageService) {
     //Gets the quiz the user selected on the index page. This quiz will have 10 questions, selected randomly.
     var generatedQuiz = $rootScope.generatedQuiz;  
     
@@ -83,7 +83,7 @@ qqApp.controller("quizController", function($scope, $rootScope, $location, login
         }
 
         //persist the information about this attempt
-        var user = loginService.getLoggedUser();
+        var user = authenticationService.getLoggedUser();
 
         var quizTries = null;
         for(i=0; i<user.quizTries.length; i++){
@@ -108,7 +108,7 @@ qqApp.controller("quizController", function($scope, $rootScope, $location, login
         // storageService.setUser(user).then(function(){
                     
         //     //save the results to the current user
-        //     loginService.login(user);
+        //     authenticationService.login(user);
 
         // },function(err){
         //     console.log(err);

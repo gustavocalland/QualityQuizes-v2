@@ -1,5 +1,3 @@
-var mongo = require('mongodb').MongoClient;
-
 exports.init = function (options, callback) {
 
     mongo.connect(options.mongoDatabase, function (err, database) {

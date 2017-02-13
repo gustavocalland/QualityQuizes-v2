@@ -1,8 +1,9 @@
-qqApp.service('loginService', function() {
+qqApp.service('authenticationService', function() {
     this.isLoggedIn = function(){
         return sessionStorage.loggedInUser != null;
     };
     this.login = function(user){
+        console.log(user);
         sessionStorage.setItem("loggedInUser",JSON.stringify(user));
     }
     this.logout = function(){
@@ -13,77 +14,56 @@ qqApp.service('loginService', function() {
     }
 });
 
-//Obtains data from the json
+// --- This service is used to obtain stored data from the server ---\\
 qqApp.service('storageService', function($http, $q){
 
-    this.getQuizList = function () {
-
+    //Get all quizes, so they can be displayed for user selection
+    this.getAllQuizes = function () {
         return $q(function (resolve, reject) {
-
-            $http.get("/listQuizes/").then(function(response) {
+            $http.get("/quiz/getAllQuizes/").then(function(response) {
                 resolve(response.data); 
-
             }, function(err) {
                 reject(err);
             });            
-        
         });
-
     };
 
+    //----- Authentication -----\\
     this.login = function (email, password) {
-
         return $q(function (resolve, reject) {
-
             $http(
                 {
                     'method': 'POST',
-                    'url': '/login/',
+                    'url': '/auth/login/',
                     'data':  'email=' + email + '&password=' + password,
                     'headers': {'Content-Type': 'application/x-www-form-urlencoded'}
                 }
             ).then(function(response) {
-
                 if (response.data.error) {
                     reject(response);
                 }else{
                     resolve(response.data); 
                 }
-
             }, function(err) {
                 reject(err);
             });            
-        
         });
-
     };
 
-
     this.logout = function () {
-
         return $q(function (resolve, reject) {
-
-            $http.get('/logout/').then(function(response) {
-
+            $http.get('/auth/logout/').then(function(response) {
                 if (response.data.error) {
                     reject(response);
                 }else{
                     resolve(response.data); 
                 }
-
             }, function(err) {
                 //some error
                 reject(err);
             });            
-        
         });
-
     };
-
-    this.setScore = function (){
-
-        
-    }
 
     this.signUp = function (userJson) {
 
@@ -116,10 +96,4 @@ qqApp.service('storageService', function($http, $q){
         });
 
     };
-
-    
-    function logError(error){
-        console.log("ERROR: "+error);
-    }
-
 });

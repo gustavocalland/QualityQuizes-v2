@@ -1,0 +1,39 @@
+    No mongo, diferente do modelo relacional classico, e melhor pegar um grande numero de dados relacionados 
+de uma so tabela do que pegar dados de varias tabelas diferentes para retornar uma so resposta.
+    Deixar muitas tabelas separadas, que nem voce faria num database normal, pode afetar a performance. Isso 
+se chama "over-normalizing"
+    Mas voce tambem nao deve nao abusar e jogar todos os dados numa tabela so. Isso se chama "Over Embedding"..
+
+    Sinais que voce esta fazendo over embedding:
+        + Unbonded growth - Voce tem um array, por exemplo, que vive crescendo para sempre, cada vez que o usuario 
+        faz algo. O document vai crescendo e crescendo para sempre e voce nao tem controle...
+        + Deeply nested arrays - array dentro de array dentro de array dentro de array dentro de array ... e voce nao precisa
+        dessa palhacada toda. Se um array tiver mais de 5 sub-arrays dentro dele, voce esta fazendo algo errado.
+        + Documents muito grandes - isso nem sempre e verdade. Algumns documents, retornando todos os seus dados, vao ser grandes
+        mesmo, nao tem jeito. Mas se voce tiver um retorno gigante, e bom ver se voce precisa mesmo de todos aqueles dados
+    Sinais que voce esta over normalizing:
+        + Se voce esta fazendo muitos joins, em vez de queries simples, voce esta fazendo merda.
+    Outras coisas que voce tem que levar em consideracao ao fazer um database:
+        + Polymorphic colections - Cada document dentro da colection e diferente do outro. Voce pode fazer isso, mas nao e legal.
+        + Polymorphic fields - um field tem tipos de valores diferentes em varios documents diferentes. Ex- o field nome
+        em um document e o nome da pessoa, no outro o nome do cachorro, no outro e um numero que representa o nome da pessoa 
+        em binario.... nao e bom.
+        +++ Cant use indexes - nao sei o que e um index, entao vou deixar isso aqui por enquanto
+            + Bad regex queries
+            + Lots of indexes
+            + No indexes
+    
+    O que sao indexes - quando alguem reclama que o mongo e muito lento, 90% dos casos e porque o index e horrivel ou nao existem
+indexes.
+
+http://seanhess.github.io/2012/02/01/mongodb_relational.html
+
+https://www.youtube.com/watch?v=4rhKKFbbYT4
+    Embedding -- Fazer quando:
+        + Child data belongs to the parent data
+        + Sub-documents are small in size
+        + Hierarchical structures
+    Referencing  -- Fazer quando:
+        + Many to Many
+        + sub-documents continuously increase in size
+        + large (16mb) sub-document information
