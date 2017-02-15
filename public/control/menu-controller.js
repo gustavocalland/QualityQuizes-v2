@@ -1,5 +1,5 @@
 qqApp.controller("menuController", function ($scope, $rootScope, $http, storageService, authenticationService) {
-
+    
     init();
 
     //When a login event is detected, calls the init function
@@ -19,9 +19,10 @@ qqApp.controller("menuController", function ($scope, $rootScope, $http, storageS
 
     //Gets all quizes from the database
     function loadQuizes(){
-        storageService.getAllQuizes().then(
+        var user = authenticationService.getLoggedUser();
+        storageService.getAllQuizes(user==null?"":user._id).then(
             function(quizList) {
-                listQuiz(quizList);
+                $scope.quizList = quizList;
             }, 
             function(reason) {
                 console.error("Error obtaining quiz list: "+reason.data);
@@ -30,11 +31,11 @@ qqApp.controller("menuController", function ($scope, $rootScope, $http, storageS
         );
         
     };
-
+/*
     function listQuiz(quizList){
         //  If there is a logged in user, initializes the tags that say how many times 
         //they completed the quiz and what is their max score.
-        var user = authenticationService.getLoggedUser();
+       
         if(user){
             for (var qIndex = 0; qIndex < quizList.length; qIndex++) {
                 var element = quizList[qIndex];
@@ -57,7 +58,7 @@ qqApp.controller("menuController", function ($scope, $rootScope, $http, storageS
         }
 
         $scope.quizList = quizList;
-    }
+    }*/
     
     //This function takes a quiz object (definied in the JSON) and generates a new quiz object 
     // with only 10 questions, taken randomly from the original quiz

@@ -34,6 +34,7 @@ app.get('*', function(req, res){
     res.redirect('/');
 });
 
-app.listen(3000, function () {
+app.listen(3000, function (err) {
+    if(err){throw err}
     console.log('Quality Quizes listening on port 3000!')
 });

@@ -4,6 +4,8 @@ var router  = express.Router();
 var Quiz = require('../models/quiz-model');
 var User = require('../models/user-model');
 
+var QuizUser = require('../models/quiz-user-model');
+
 var mongoose = require('mongoose');
 
 
@@ -11,11 +13,18 @@ router.get('/',function(req, res){
 
     mongoose.connection.db.dropCollection('quizes');
     mongoose.connection.db.dropCollection('users');
+    mongoose.connection.db.dropCollection('quizusers');
 
     var defaultUser = new User({
         firstName:"Admin",
         email:"admin@gmail.com",
         password:"123456",
+    });
+
+    var defaultUser2 = new User({
+        firstName:"Admisasn",
+        email:"admin@gasasmail.com",
+        password:"12asasas3456",
     });
 
     var defaultQuiz1 = new Quiz({
@@ -42,9 +51,7 @@ router.get('/',function(req, res){
             {title :"What is i data type? let i = 10",answers:["Double","Float","Decimal","Int"],correctAnswer:3},
             {title :"Who was the person who invented swift? ",answers:["Bill gates","Chris Lattner","Steve Jobs","Jony Ive"],correctAnswer:1},
             {title :"In which IDE can you debug swift apps?",answers:["Visual Studio","XStudio","Xcode","Apple Studio"],correctAnswer:2}
-        ],
-
-        userTries:[{userId:defaultUser._id, numberOfTries:4, maxScore:"2/10"}]
+        ]        
     });
 
     var defaultQuiz2 = new Quiz({
@@ -74,6 +81,13 @@ router.get('/',function(req, res){
         ]
     });
 
+    var quizDoneByUser = new QuizUser({
+        quizId:defaultQuiz1._id,
+        userId:defaultUser._id,
+        numberOfTries:3,
+        maxScore:"9/10"
+    });
+
 
     var message = "Initializing database... <br/><ul>"
     defaultQuiz1.save(function(err, product){
@@ -91,9 +105,13 @@ router.get('/',function(req, res){
                 console.log(savedUser.firstName+" was saved")
                 message += "<li>User '"+savedUser.email+"' was saved</li>";
             }).then(function(){
-                message += "</ul>"
-                res.send(message);
-            })
+                quizDoneByUser.save(function(err){
+                    if(err){throw err}
+                }).then(function(){
+                    message += "</ul>"
+                    res.send(message);
+                });
+            });
         });
     });
 });

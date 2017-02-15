@@ -8,24 +8,12 @@ var quizSchema = mongoose.Schema({
         answers:[String],
         correctAnswer:Number
     }],
-
-    userTries:[{
-        userId:mongoose.Schema.Types.ObjectId,
-        numberOfTries:{type:Number, default:0},
-        maxScore:String
-    }]
 });
 
 //Get all quizes, but only the id, title and description fields
-quizSchema.statics.getQuizList = function(loggedUserId,callback){
-    var query = this.find().select('title description');
-    
-    if(loggedUserId!=null){
-        query.select("userTries");
-        query.find({"userTries.userId":loggedUserId});
-    }
-    
-    query.exec(callback);
+quizSchema.statics.getAll = function(callback){
+    //lean() returns the data as a javascript object, that can be edited later
+    this.find().select('title description').lean().exec(callback);  
 }
 
 var Quiz = module.exports = mongoose.model('quizes',quizSchema);

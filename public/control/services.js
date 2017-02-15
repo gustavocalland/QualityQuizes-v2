@@ -18,9 +18,10 @@ qqApp.service('authenticationService', function() {
 qqApp.service('storageService', function($http, $q){
 
     //Get all quizes, so they can be displayed for user selection
-    this.getAllQuizes = function () {
+    this.getAllQuizes = function (loggedInUserId) {
         return $q(function (resolve, reject) {
-            $http.get("/quiz/getAllQuizes/").then(function(response) {
+            var userId = loggedInUserId==null?"":loggedInUserId;
+            $http.get("/quiz/getAllQuizes/"+userId).then(function(response) {
                 resolve(response.data); 
             }, function(err) {
                 reject(err);

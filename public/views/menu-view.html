@@ -9,9 +9,9 @@
             <a ng-click="generateQuiz(quiz, $event)" ng-href="quiz">{{quiz.title}}</a> <br/>
             <small>{{quiz.description}}</small>
         </h3>
-        <div ng-show="quiz.showResults">
-            <span class="label">Number of tries <span class="badge">{{quiz.numberOfTries}}</span></span>
-            <span class="label badge-label-success">Score <span class="badge">{{quiz.maxScore}}</span></span>
+        <div ng-show="quiz.userTries!=null">
+            <span class="label">Number of tries <span class="badge">{{quiz.userTries.numberOfTries}}</span></span>
+            <span class="label badge-label-success">Score <span class="badge">{{quiz.userTries.maxScore}}</span></span>
         </div>
     </div>
 
