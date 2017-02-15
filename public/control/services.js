@@ -1,4 +1,4 @@
-qqApp.service('authenticationService', function() {
+qqApp.service('sessionStorageService', function() {
     this.isLoggedIn = function(){
         return sessionStorage.loggedInUser != null;
     };
@@ -15,8 +15,7 @@ qqApp.service('authenticationService', function() {
 });
 
 // --- This service is used to obtain stored data from the server ---\\
-qqApp.service('storageService', function($http, $q){
-
+qqApp.service('serverComunicationService', function($http, $q){
     //Get all quizes, so they can be displayed for user selection
     this.getAllQuizes = function (loggedInUserId) {
         return $q(function (resolve, reject) {
@@ -29,7 +28,18 @@ qqApp.service('storageService', function($http, $q){
         });
     };
 
-    //----- Authentication -----\\
+    this.getRandomizedQuiz = function(quizId){
+        return $q(function (resolve, reject) {
+            $http.get("/quiz/generateRandomQuiz/"+quizId).then(function(response) {
+                resolve(response.data); 
+            }, function(err) {
+                reject(err);
+            });            
+        });
+    }
+//});
+
+//qqApp.service('authenticationService', function($http, $q){
     this.login = function (email, password) {
         return $q(function (resolve, reject) {
             $http(

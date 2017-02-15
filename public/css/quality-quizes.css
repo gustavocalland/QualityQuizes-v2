@@ -15,15 +15,20 @@
     margin: 10px 0px 0px 10px;
 }
 
+.selectable:hover{
+    background-color: #EEE;
+    cursor:pointer;
+ }
+
 .quiz-selected-answer{
     background-color: #d9edf7;
     font-weight: bold;
 }
 
-#answers-div .panel-body:hover{
-    background-color: #DDD;
-    cursor:pointer;
- }
+.quiz-selected-answer:hover{
+    background-color: #c0dcea;
+    font-weight: bold;
+}
 
 span.label{
     font-size: 15px;

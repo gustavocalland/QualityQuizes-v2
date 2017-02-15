@@ -10,8 +10,8 @@
         </div>
         <!-- Available options -->
         <div id="answers-div" class="panel-body">
-            <div ng-repeat="answer in currentQuestion.answers" ng-class="{'quiz-selected-answer':$index==userAnswer}" class="panel panel-default">
-                <div  class="panel-body" ng-click="selectAnswer($index)">
+            <div ng-repeat="answer in currentQuestion.answers" class="panel panel-default">
+                <div ng-class="{'quiz-selected-answer':$index==userAnswer}"  class="panel-body selectable" ng-click="selectAnswer($index)">
                     <h4>{{answer}}</h4>
                 </div>
             </div>

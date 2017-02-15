@@ -16,4 +16,8 @@ quizSchema.statics.getAll = function(callback){
     this.find().select('title description').lean().exec(callback);  
 }
 
+quizSchema.statics.getAllQuizQuestions = function(quizId, callback){
+    this.findById(quizId).select("title questions").exec(callback);
+}
+
 var Quiz = module.exports = mongoose.model('quizes',quizSchema);

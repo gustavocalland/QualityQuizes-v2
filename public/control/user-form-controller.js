@@ -1,5 +1,5 @@
 //Controller used for the sign up and editing of user data
-qqApp.controller("userFormController", function($scope, $location, authenticationService, storageService) {
+qqApp.controller("userFormController", function($scope, $location, sessionStorageService, serverComunicationService) {
     var currentUser=null;
     $scope.errorMessage = "";
 
@@ -18,12 +18,12 @@ qqApp.controller("userFormController", function($scope, $location, authenticatio
 
     //If the user is logged in and is accessing this controller, it means that 
     // he is trying to edit his info
-    if(authenticationService.isLoggedIn()){
+    if(sessionStorageService.isLoggedIn()){
         $scope.pageTitle = "My profile";   
         $scope.pageMessage = "";     
         $scope.buttonTitle = "Update my profile";
 
-        currentUser = authenticationService.getLoggedUser();
+        currentUser = sessionStorageService.getLoggedUser();
         $scope.firstNameInput = currentUser.firstName;
         $scope.lastNameInput  = currentUser.lastName;
         $scope.emailInput     = currentUser.email;
@@ -58,10 +58,10 @@ qqApp.controller("userFormController", function($scope, $location, authenticatio
         };
 
 
-        storageService.signUp(newUser).then(
+        serverComunicationService.signUp(newUser).then(
             function (user) {
 
-                authenticationService.login(user);
+                sessionStorageService.login(user);
 
                 $location.path('/');
 

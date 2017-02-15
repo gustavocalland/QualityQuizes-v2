@@ -1,25 +1,25 @@
-qqApp.controller("navBarController", function($scope, $rootScope, $location, storageService, authenticationService) {
+qqApp.controller("navBarController", function($scope, $rootScope, $location, serverComunicationService, sessionStorageService) {
 
     init();
 
     function init(){
-        $scope.userIsLoggedIn = authenticationService.isLoggedIn();
+        $scope.userIsLoggedIn = sessionStorageService.isLoggedIn();
 
         if($scope.userIsLoggedIn){
-            $scope.loggedInUser = authenticationService.getLoggedUser();
+            $scope.loggedInUser = sessionStorageService.getLoggedUser();
         }
     }
 
     $scope.logout = function()
     {
 
-        storageService.logout().then(
+        serverComunicationService.logout().then(
             function(){
                 
                 $scope.userIsLoggedIn = false;
                 $scope.loggedInUser = null;
 
-                authenticationService.logout();
+                sessionStorageService.logout();
                 $location.path('/');
 
                 $scope.$emit('loginEvent', "user saiu");
@@ -36,14 +36,14 @@ qqApp.controller("navBarController", function($scope, $rootScope, $location, sto
 
 });
 
-qqApp.controller("loginModalController", function($scope, $location, storageService, authenticationService) {
+qqApp.controller("loginModalController", function($scope, $location, serverComunicationService, sessionStorageService) {
     $scope.invalidCredentials = false;
 
     $scope.login = function () {
 
-        storageService.login($scope.emailInput, $scope.passwordInput).then(function(user){
+        serverComunicationService.login($scope.emailInput, $scope.passwordInput).then(function(user){
 
-            authenticationService.login(user);
+            sessionStorageService.login(user);
             $location.path('/');
             
             $scope.$emit('loginEvent', "user entrou");
