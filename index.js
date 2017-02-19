@@ -20,10 +20,12 @@ app.use(session({
 
 //--- Initializing the routes ---\\
 var quizRoutes = require('./api/routes/quiz-routes');
+var userRoutes = require('./api/routes/user-routes');
 var authRoutes = require('./api/routes/authentication-routes');
 var initRoutes = require('./api/routes/init-routes');
 
 app.use('/quiz', quizRoutes); 
+app.use('/user', userRoutes); 
 app.use('/auth', authRoutes);
 app.use('/init', initRoutes);
 

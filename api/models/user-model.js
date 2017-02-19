@@ -3,15 +3,14 @@ var mongoose = require('mongoose');
 var userSchema = mongoose.Schema({
     firstName:String,
     lastName:String,
-    email:String,
+    email:{type: String, unique: true},
     phone:String,
     address:String,
     password:String,
 });          
 
 userSchema.statics.getByEmail = function(pEmail, callback){
-    //Get a single user by his email. Doesnt get the quizTries array.
-    User.findOne({email: pEmail},callback).select("-quizTries");
+    User.findOne({email: pEmail},callback);
 }
 
 userSchema.statics.getQuizTries = function(pId, callback){

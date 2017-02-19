@@ -16,6 +16,8 @@ qqApp.controller("userFormController", function($scope, $location, sessionStorag
     $scope.passwordInput        = ""
     $scope.confirmPasswordInput = ""
 
+    $scope.confirmPasswordValid = false;
+
     //If the user is logged in and is accessing this controller, it means that 
     // he is trying to edit his info
     if(sessionStorageService.isLoggedIn()){
@@ -35,44 +37,69 @@ qqApp.controller("userFormController", function($scope, $location, sessionStorag
         $scope.errorMessage = "";
         $scope.emailContainerClass = "";
 
-
-        if ($scope.myForm.$invalid){
-            $scope.errorMessage = "Please, fill all required fields!";
-            return;
-        }
-
-        if($scope.passwordInput != $scope.confirmPasswordInput){
-            $scope.errorMessage = "The passwords do not match.";
-            $scope.emailContainerClass = "has-error"
-            return;
-        }
-
-
-        var newUser = {
-            "firstName":$scope.firstNameInput,
-            "lastName":$scope.lastNameInput,
-            "email":$scope.emailInput,
-            "phone":$scope.phoneInput,
-            "address":$scope.addressInput,
-            "password":$scope.passwordInput
-        };
-
-
-        serverComunicationService.signUp(newUser).then(
-            function (user) {
-
-                sessionStorageService.login(user);
-
-                $location.path('/');
-
-                $scope.$emit('loginEvent', "user entrou");
-
-            },
-            function (err){
-                $scope.errorMessage = err;
+        serverComunicationService.getUserByEmail($scope.emailInput).then(function (emailUser) {
+            if ($scope.myForm.$invalid){
+                $scope.errorMessage = "Please, fill all required fields!";
+                return;
             }
-        );
 
+            //If a user with this e-mail was found in the database, but he is not the one that is currently logged in...
+            if((emailUser!=null) && (currentUser == null || currentUser.id != emailUser.id)){
+                $scope.errorMessage = "This e-mail is already registered. Try loggin in.";
+                return;
+            }
+
+            if($scope.passwordInput != $scope.confirmPasswordInput){
+                $scope.errorMessage = "The passwords do not match.";
+                $scope.emailContainerClass = "has-error"
+                return;
+            }
+
+            //No errors detected
+            if($scope.errorMessage == ""){
+
+                var newUser = {
+                    "firstName":$scope.firstNameInput,
+                    "lastName":$scope.lastNameInput,
+                    "email":$scope.emailInput,
+                    "phone":$scope.phoneInput,
+                    "address":$scope.addressInput,
+                    "password":$scope.passwordInput
+                };
+
+                if (currentUser != null){
+                    newUser.id = currentUser.id;
+                }
+
+                serverComunicationService.signUp(newUser).then(
+                    function (savedUser) {
+                        sessionStorageService.login(savedUser);
+                        $location.path('/');
+                        $scope.$emit('loginEvent', "user entrou");
+                    },
+                    function (err){
+                        $scope.errorMessage = err;
+                    }
+                );
+            }
+        })
+    }
+
+    $scope.validateConfirmPassword = function(){
+        if($scope.myForm.confirmPasswordInput.$invalid){
+            $scope.confirmPasswordErrorMessage = "Invalid field.";
+            $scope.confirmPasswordValid = false;
+            return;
+        }
+        if($scope.confirmPasswordInput != $scope.passwordInput){
+            $scope.confirmPasswordErrorMessage = "The passwords do not match.";
+            $scope.confirmPasswordValid = false;
+            return;
+        }
+
+        $scope.confirmPasswordErrorMessage =""
+        $scope.confirmPasswordValid = true;
+        return;
     }
 
 });

@@ -6,11 +6,15 @@ var router  = express.Router();
 var User = require('../models/user-model');
 var sess;
 
+router.get('/getUserByEmail',function(req, res){
+
+});
+
 router.post('/login',function(req,res){
     sess=req.session;
 
     User.getByEmail(req.body.email, function (err, foundUser) {
-
+        console.log("HOIHHIIH");
         if (foundUser == null){
             res.json({error: 'user not found!'});
         }else{
@@ -37,70 +41,25 @@ router.get('/logout',function(req,res){
 });
 
 
-/*
+
 router.post('/signUp',function(req,res){
     sess=req.session;
 
+    var u = new User();
+        u.id = req.body.id,
+        u.firstName = req.body.firstName,
+        u.lastName = req.body.lastName,
+        u.email = req.body.email,
+        u.phone = req.body.phone,
+        u.address = req.body.address,
+        u.password = req.body.password;
 
-    //lets make some validations here
-
-
-    myMongo.find(myMongo.db.collection('users'), {'email': req.body.email}, function (err, foundItems) {
-
-        if (foundItems.length > 0){ 
-            if (sess.user){
-                if (sess.user._id != foundItems[0]._id){
-                    res.json({error: 'This e-mail is already registered. Try loggin in.'});
-                    return;
-                }
-            }else{
-                res.json({error: 'This e-mail is already registered. Try loggin in.'});
-                return;
-            }
-        }
-
-
-        var user = {
-            "firstName":req.body.firstName,
-            "lastName":req.body.lastName,
-            "email":req.body.email,
-            "phone":req.body.phone,
-            "address":req.body.address,
-            "password":req.body.password,
-            "quizTries" : (sess.user) ? sess.user.quizTries : []
-        };
-
-        if (sess.user){
-            myMongo.update(myMongo.db.collection('users'), { 'email': sess.user.email },
-                                        { $set: 
-                                            {
-                                                "firstName":req.body.firstName,
-                                                "lastName":req.body.lastName,
-                                                "email":req.body.email,
-                                                "phone":req.body.phone,
-                                                "address":req.body.address,
-                                                "password":req.body.password,
-                                                "quizTries" : (sess.user) ? sess.user.quizTries : []
-                                            }
-                                        },
-                                        { multi: false },
-                                        function (err, numReplaced) {
-                                            if (err) return res.json({error: err});
-                
-                                            res.json(user);
-                                        });
-        }else{
-
-            myMongo.insert(myMongo.db.collection('users'), user, function (err){
-                if (err) return res.json({error: err});
-                
-                res.json(user);
-            });
-
-        }
-
+    u.save().then(function (savedUser){
+        console.log('The user '+savedUser.email+' was saved!')
+        res.json({savedUser});
+    },function(err){
+        res.json({error: err});
     });
-
-});*/
+});
 
 module.exports = router;

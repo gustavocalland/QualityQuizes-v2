@@ -37,6 +37,16 @@ qqApp.service('serverComunicationService', function($http, $q){
             });            
         });
     }
+
+    this.getUserByEmail = function(email){
+        return $q(function (resolve, reject) {
+            $http.get("/user/getByEmail/"+email).then(function(response) {
+                resolve(response.data); 
+            }, function(err) {
+                reject(err);
+            });            
+        });
+    }
 //});
 
 //qqApp.service('authenticationService', function($http, $q){
@@ -76,24 +86,21 @@ qqApp.service('serverComunicationService', function($http, $q){
         });
     };
 
-    this.signUp = function (userJson) {
-
+    this.signUp = function (user) {
         return $q(function (resolve, reject) {
-
-            $http(
-                {
-                    'method': 'POST',
-                    'url': 'signUp/',
-                    'data': 'firstName=' + userJson.firstName + 
-                            '&lastName=' + userJson.lastName +
-                            '&phone=' + userJson.phone +
-                            '&address=' + userJson.address +
-                            '&email=' + userJson.email +
-                            '&password=' + userJson.password,
-                    'headers': {'Content-Type': 'application/x-www-form-urlencoded'}
-                }
-            ).then(function(response) {
-
+            $http({
+                'method': 'POST',
+                'url': '/auth/signUp/',
+                'data': 
+                        'id=' + user.id +
+                        '&firstName=' + user.firstName + 
+                        '&lastName=' + user.lastName +
+                        '&phone=' + user.phone +
+                        '&address=' + user.address +
+                        '&email=' + user.email +
+                        '&password=' + user.password,
+                'headers': {'Content-Type': 'application/x-www-form-urlencoded'}   
+            }).then(function(response) {
                 if (response.data.error) {
                     reject(response);
                 }else{
