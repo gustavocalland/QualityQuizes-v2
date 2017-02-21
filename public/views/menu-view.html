@@ -6,7 +6,7 @@
 
     <div class="panel panel-default panel-body" ng-repeat="quiz in quizList">
         <h3>
-            <a ng-click="generateQuiz(quiz, $event)" ng-href="quiz">{{quiz.title}}</a> <br/>
+            <a ng-click="generateQuiz(quiz, $event)" ng-href="/">{{quiz.title}}</a> <br/>
             <small>{{quiz.description}}</small>
         </h3>
         <div ng-show="quiz.userTries!=null">

@@ -1,4 +1,4 @@
-qqApp.controller("menuController", function ($scope, $rootScope, $http, serverComunicationService, sessionStorageService) {
+qqApp.controller("menuController", function ($scope, $rootScope, $http, $location, serverComunicationService, sessionStorageService) {
     
     init();
 
@@ -37,10 +37,10 @@ qqApp.controller("menuController", function ($scope, $rootScope, $http, serverCo
                 function(randomizedQuiz){
                     //set the generate quiz to $rootScope so the quizController can get it
                     $rootScope.generatedQuiz = randomizedQuiz;
-                    console.log($rootScope.generatedQuiz);
+                    $location.path('/quiz');
+                    return;
                 }
             );
-            console.log("ASYNCH!!");
         }else{
             //Cancels the redirect to the next page and demands login
             $scope.showLoginRequiredAlert = true;

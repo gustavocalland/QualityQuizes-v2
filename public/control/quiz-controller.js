@@ -1,4 +1,4 @@
-qqApp.controller("quizController", function($scope, $rootScope, $location, sessionStorageService) {
+qqApp.controller("quizController", function($scope, $rootScope, $location, sessionStorageService, serverComunicationService) {
     //Gets the quiz the user selected on the index page. This quiz will have 10 questions, selected randomly.
     var generatedQuiz = $rootScope.generatedQuiz;  
     
@@ -84,24 +84,16 @@ qqApp.controller("quizController", function($scope, $rootScope, $location, sessi
 
         //persist the information about this attempt
         var user = sessionStorageService.getLoggedUser();
+        var quizTries = serverComunicationService.getQuizTries($rootScope.generatedQuiz._id, user._id);
 
-        var quizTries = null;
-        for(i=0; i<user.quizTries.length; i++){
-            if(user.quizTries[i].quizId == $rootScope.generatedQuiz.id){
-                quizTries = user.quizTries[i];
 
-                quizTries.numberOfTries = parseInt(quizTries.numberOfTries) + 1;
-                var maxScore = parseInt(quizTries.maxScore.split("/")[0]);
+        quizTries.numberOfTries = parseInt(quizTries.numberOfTries) + 1;
 
-                if (maxScore < $scope.finalScore){
-                    quizTries.maxScore = $scope.finalScore +"/10";
-                }
-                break;
-            }
+        maxScore = parseInt(quizTries.maxScore.split("/")[0]);
+        if (maxScore < $scope.finalScore){
+            quizTries.maxScore = $scope.finalScore +"/10";
         }
 
-        if (quizTries == null){
-            user.quizTries.push({"quizId" : $rootScope.generatedQuiz.id,"numberOfTries":1,"maxScore": ($scope.finalScore +"/10")});
-        }
+        serverComunicationService.updateQuizTries(quizTries);
      }
 });

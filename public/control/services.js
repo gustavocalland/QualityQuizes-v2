@@ -47,6 +47,14 @@ qqApp.service('serverComunicationService', function($http, $q){
             });            
         });
     }
+
+    this.getQuizTries = function(quizId, userId){
+
+    }
+
+    this.updateQuizTries = function(quizTries){
+
+    }
 //});
 
 //qqApp.service('authenticationService', function($http, $q){
