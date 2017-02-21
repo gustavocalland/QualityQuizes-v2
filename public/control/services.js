@@ -104,7 +104,7 @@ qqApp.service('serverComunicationService', function($http, $q){
                 if (response.data.error) {
                     reject(response);
                 }else{
-                    resolve(response.data); 
+                    resolve(response.data.savedUser); 
                 }
 
             }, function(err) {

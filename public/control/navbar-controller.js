@@ -42,7 +42,7 @@ qqApp.controller("loginModalController", function($scope, $location, serverComun
     $scope.login = function () {
 
         serverComunicationService.login($scope.emailInput, $scope.passwordInput).then(function(user){
-
+            
             sessionStorageService.login(user);
             $location.path('/');
             

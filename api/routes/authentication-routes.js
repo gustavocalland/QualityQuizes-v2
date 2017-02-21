@@ -14,7 +14,6 @@ router.post('/login',function(req,res){
     sess=req.session;
 
     User.getByEmail(req.body.email, function (err, foundUser) {
-        console.log("HOIHHIIH");
         if (foundUser == null){
             res.json({error: 'user not found!'});
         }else{
