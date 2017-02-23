@@ -3,7 +3,6 @@ qqApp.service('sessionStorageService', function() {
         return sessionStorage.loggedInUser != null;
     };
     this.login = function(user){
-        console.log(user);
         sessionStorage.setItem("loggedInUser",JSON.stringify(user));
     }
     this.logout = function(){
@@ -48,12 +47,56 @@ qqApp.service('serverComunicationService', function($http, $q){
         });
     }
 
-    this.getQuizTries = function(quizId, userId){
+    //TODO -- FAZER UMA FUNCAO QUE PEGUE ISSO TUDO
 
+    this.getQuizTries = function(quizId, userId){
+        return $q(function (resolve, reject) {
+            $http.get("/quiz/getTries/"+quizId+"/"+userId).then(function(response) {
+                //Returns the found data or an empty quizTries object if nothing is found on the database
+                var quizTries;
+                if(response.data){
+                    quizTries = response.data;
+                }else{
+                    quizTries = {
+                        "quizId":quizId,
+                        "userId":userId,
+                        "numberOfTries":0,
+                        "maxScore":"0/10"
+                    };
+                }
+
+                resolve(quizTries); 
+            }, function(err) {
+                reject(err);
+            });            
+        });
     }
 
-    this.updateQuizTries = function(quizTries){
-
+    this.updateQuizTries = function(quizTriesJson){
+        return $q(function (resolve, reject) {
+            $http(
+                {
+                    'method': 'POST',
+                    'url': '/quiz/insertUpdateTries/',
+                    'data':  
+                        'id=' + quizTriesJson._id + 
+                        '&password=' + quizTriesJson.password +
+                        '&userId=' + quizTriesJson.userId +
+                        '&quizId=' + quizTriesJson.quizId +
+                        '&numberOfTries=' + quizTriesJson.numberOfTries +
+                        '&maxScore=' + quizTriesJson.maxScore,
+                    'headers': {'Content-Type': 'application/x-www-form-urlencoded'}
+                }
+            ).then(function(response) {
+                if (response.data.error) {
+                    reject(response);
+                }else{
+                    resolve(response.data); 
+                }
+            }, function(err) {
+                reject(err);
+            });            
+        });
     }
 //});
 

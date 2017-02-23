@@ -45,14 +45,18 @@ router.post('/signUp',function(req,res){
     sess=req.session;
 
     var u = new User();
-        u.id = req.body.id,
-        u.firstName = req.body.firstName,
-        u.lastName = req.body.lastName,
-        u.email = req.body.email,
-        u.phone = req.body.phone,
-        u.address = req.body.address,
+        if(req.body.id != "undefined"){
+            u._id = req.body.id;
+            //Required, otherwise the "save" method won't update
+            u.isNew = false;
+        }
+        u.firstName = req.body.firstName;
+        u.lastName = req.body.lastName;
+        u.email = req.body.email;
+        u.phone = req.body.phone;
+        u.address = req.body.address;
         u.password = req.body.password;
-
+        
     u.save().then(function (savedUser){
         console.log('The user '+savedUser.email+' was saved!')
         res.json({savedUser});

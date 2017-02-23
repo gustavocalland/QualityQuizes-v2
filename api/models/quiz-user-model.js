@@ -8,7 +8,7 @@ var quizUserSchema = mongoose.Schema({
 });
 
 quizUserSchema.statics.getQuizInfoByUser = function(userId, quizId, callback){
-     this.findOne({"userId":userId, "quizId":quizId}).select('numberOfTries maxScore').exec(callback);
+     this.findOne({"userId":userId, "quizId":quizId}).exec(callback);
 }
 
 var QuizByUser = module.exports = mongoose.model('quizusers',quizUserSchema);

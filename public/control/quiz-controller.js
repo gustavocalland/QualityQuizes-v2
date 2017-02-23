@@ -84,16 +84,21 @@ qqApp.controller("quizController", function($scope, $rootScope, $location, sessi
 
         //persist the information about this attempt
         var user = sessionStorageService.getLoggedUser();
-        var quizTries = serverComunicationService.getQuizTries($rootScope.generatedQuiz._id, user._id);
+        serverComunicationService.getQuizTries($rootScope.generatedQuiz._id, user._id).then(function(quizTries){
+            console.log("QUIZ TRIES:")
+            console.log(quizTries);
 
+            quizTries.numberOfTries = parseInt(quizTries.numberOfTries) + 1;
 
-        quizTries.numberOfTries = parseInt(quizTries.numberOfTries) + 1;
+            maxScore = parseInt(quizTries.maxScore.split("/")[0]);
+            if (maxScore < $scope.finalScore){
+                quizTries.maxScore = $scope.finalScore +"/10";
+            }
 
-        maxScore = parseInt(quizTries.maxScore.split("/")[0]);
-        if (maxScore < $scope.finalScore){
-            quizTries.maxScore = $scope.finalScore +"/10";
-        }
-
-        serverComunicationService.updateQuizTries(quizTries);
+            console.log("NOVO QUIZ TRIES:")
+            console.log(quizTries);
+            
+            serverComunicationService.updateQuizTries(quizTries);
+        });
      }
 });

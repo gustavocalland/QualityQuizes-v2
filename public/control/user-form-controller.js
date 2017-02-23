@@ -68,7 +68,7 @@ qqApp.controller("userFormController", function($scope, $location, sessionStorag
                 };
 
                 if (currentUser != null){
-                    newUser.id = currentUser.id;
+                    newUser.id = currentUser._id;
                 }
 
                 serverComunicationService.signUp(newUser).then(
